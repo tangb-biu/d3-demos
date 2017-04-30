@@ -1,15 +1,17 @@
 const gulp = require('gulp'),
-	  uglify = requre('gulp-uglify'),
+	  uglify = require('gulp-uglify'),
 	  concat = require('gulp-concat'),
-	  rename = requrie('gulp-rename'),
+	  rename = require('gulp-rename'),
 	  connect = require('gulp-connect');
 
+gulp.task('html', function () {
+	gulp
+	.src('test/**/*.html')
+	.pipe(connect.reload());
+})
+
 gulp.task('watch', () => {
-	gulp.watch(['**'], () => {
-		gulp
-		.src(['**'])
-		.pipe(connect.reload());
-	})
+	gulp.watch(['test/**/*.html'], ['html']);
 })
 
 gulp.task('connect', () => {
