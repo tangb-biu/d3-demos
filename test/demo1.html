@@ -4,6 +4,29 @@
 	<title>d3.demos</title>
 </head>
 <body>
-<h1>hello d3.js</h1>
+<!-- <script type="text/javascript" src="./d3.js"></script> -->
+<script type="text/javascript" src="../src/nest.js"></script>
+<script type="text/javascript">
+
+/* d3.nest s */
+var yields = [
+	{yield: 27.00, variety: "Manchuria", year: 1931, site: "University Farm"},
+    {yield: 48.87, year: 1931, site: "Waseca"},
+    {yield: 27.43, variety: "Manchuria", year: 1931, site: "Morris"}
+];
+
+var nest = dataNest
+		.key(function(d) {
+			return d.year;
+		})
+		.key(function(d) {
+			return d.variety;
+		})
+		.entries(yields);
+
+console.log(nest);
+
+/* d3.nest e */
+</script>
 </body>
 </html>
