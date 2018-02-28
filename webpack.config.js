@@ -7,11 +7,27 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackChunkHash = require('webpack-chunk-hash')
 var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 var InlineManifestWebpack = require('inline-manifest-webpack-plugin');
-var nodeEnv = process.env.NODE_ENV || 'development';
-const isPro = nodeEnv === 'production';
+var OpenBrowserPlugin = require('open-browser-webpack-plugin');
+var nodeEnv = process.argv[5] || 'development';
+const isPro = nodeEnv !== 'development';
 nodeEnv = nodeEnv.replace(/^\s|\s$/g, '');
 console.log("The current env is: ", isPro ? 'production' : 'development');
 
+
+if (!isPro) {
+	/*
+	const jsonServer = require('json-server')
+	const server = jsonServer.create()
+	const router = jsonServer.router('db.json')
+	const middlewares = jsonServer.defaults()
+
+	server.use(middlewares)
+	server.use(router)
+	server.listen(3000, () => {
+		console.log('JSON Server is running');
+	})
+	*/
+}
 var plugins = [
 	new ExtractTextPlugin('styles.css'),
 
@@ -24,7 +40,7 @@ var plugins = [
 	}),
 	new webpack.DefinePlugin({
 		'process.env': {
-			'NODE_ENV': JSON.stringify(nodeEnv)
+			'NODE_ENV': JSON.stringify('production')
 		}
 	}),
 
@@ -32,7 +48,7 @@ var plugins = [
 
 	new HtmlWebpackPlugin({
 		filename: `${__dirname}/index.html`,
-      	template: `${__dirname}/index.html`,
+      	template: `${__dirname}/template/index.html`,
 	}),
 
 	new InlineManifestWebpack()
@@ -58,7 +74,8 @@ if (isPro) {
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
 		new webpack.NoEmitOnErrorsPlugin(),
-		new FriendlyErrorsPlugin()
+		new FriendlyErrorsPlugin(),
+		new OpenBrowserPlugin({ url: "http://localhost:3011" })
 	)
 }
 
@@ -111,11 +128,7 @@ module.exports = {
 				test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
 				use: [
 					{
-						loader: 'file-loader',
-						options: {
-							limit: 10000,
-							name: 'images/[name].[ext]'
-						}
+						loader: 'url-loader'
 					}
 				]
 			}
@@ -124,13 +137,21 @@ module.exports = {
 	devServer: {
 		hot: true,
 		compress: true,
+		//host: "192.168.60.23",
 		port: 3011,
+		inline: true,
 		historyApiFallback: true,
 		contentBase: path.resolve(__dirname),
 		publicPath: '/build',
 		stats: {
 			modules: false,
 			chunks: false
+		},
+		proxy: {
+			"/inspect/*": {
+				target: "http://192.168.61.68:8084/",
+				secure: false
+			}
 		}
 	}
 }

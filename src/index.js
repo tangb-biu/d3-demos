@@ -1,3 +1,4 @@
 import App from '@/App.js'
 
-App.run();
+let app = new App();
+app.run();
