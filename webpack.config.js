@@ -12,8 +12,7 @@ var nodeEnv = process.argv[5] || 'development';
 const isPro = nodeEnv !== 'development';
 nodeEnv = nodeEnv.replace(/^\s|\s$/g, '');
 console.log("The current env is: ", isPro ? 'production' : 'development');
-
-
+var PORT = "9011";
 if (!isPro) {
 	/*
 	const jsonServer = require('json-server')
@@ -69,13 +68,13 @@ if (isPro) {
 		})
 	)
 } else {
-	app.unshift('react-hot-loader/patch', 'webpack-dev-server/client?http://localhost:3011', 'webpack/hot/only-dev-server')
+	app.unshift('react-hot-loader/patch', `webpack-dev-server/client?http://localhost:${PORT}`, 'webpack/hot/only-dev-server')
 	plugins.push(
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
 		new webpack.NoEmitOnErrorsPlugin(),
 		new FriendlyErrorsPlugin(),
-		new OpenBrowserPlugin({ url: "http://localhost:3011" })
+		new OpenBrowserPlugin({ url: `http://localhost:${PORT}` })
 	)
 }
 
@@ -138,7 +137,7 @@ module.exports = {
 		hot: true,
 		compress: true,
 		//host: "192.168.60.23",
-		port: 3011,
+		port: PORT,
 		inline: true,
 		historyApiFallback: true,
 		contentBase: path.resolve(__dirname),
